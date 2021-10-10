@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rpc-server-deployment
+  namespace: poc
+  labels:
+    app: rpc-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rpc-server
+  template:
+    metadata:
+      labels:
+        app: rpc-server
+    spec:
+      containers:
+      - name: rpc-server
+        image: ghcr.io/fulvi0/rpc_server
+        env:
+          - name: AMQP_HOST
+            value: "event-manager.default.svc"
+          - name: AMQP_PORT
+            value: "5672"
+          - name: AMQP_USER
+            value: "usr-server"
+          - name: AMQP_PASS
+            value: "tester"
+          - name: AMQP_VHOST
+            value: "env-dev"
+      imagePullSecrets:
+        - name: github-regcred
